@@ -13,18 +13,15 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 
-
 @Composable
-fun MovieItem(movie: Movie, viewModel: MovieViewModel, genreText: String) {
+fun MovieDetails(movie: Movie, genreText: String)
+{
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -34,7 +31,7 @@ fun MovieItem(movie: Movie, viewModel: MovieViewModel, genreText: String) {
             model = "https://image.tmdb.org/t/p/w500${movie.posterPath}",
             contentDescription = "Movie Poster",
             modifier = Modifier
-                .size(100.dp)
+                .size(150.dp)
                 .clip(RoundedCornerShape(8.dp))
                 .background(MaterialTheme.colorScheme.surface)
         )
@@ -44,21 +41,18 @@ fun MovieItem(movie: Movie, viewModel: MovieViewModel, genreText: String) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-            .padding(8.dp)
+                .padding(8.dp)
         ){
             Text(
                 text = movie.title,
                 //fontSize = 18.sp,
-                style = MaterialTheme.typography.titleMedium,
-                maxLines = 1,
+                style = MaterialTheme.typography.titleLarge,
                 overflow = TextOverflow.Ellipsis
             )
 
             Text(
                 text = "Release date: " + movie.releaseDate,
-                style = MaterialTheme.typography.bodyMedium,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
+                style = MaterialTheme.typography.bodyLarge,
             )
 
             Text(
@@ -68,13 +62,12 @@ fun MovieItem(movie: Movie, viewModel: MovieViewModel, genreText: String) {
                 overflow = TextOverflow.Ellipsis
             )
 
+
             Spacer(modifier = Modifier.height(4.dp))
 
             Text(
                 text = movie.overview,
-                style = MaterialTheme.typography.bodyMedium,
-                maxLines = 2,
-                overflow = TextOverflow.Ellipsis
+                style = MaterialTheme.typography.bodyLarge
             )
         }
     }
