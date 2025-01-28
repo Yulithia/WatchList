@@ -2,8 +2,10 @@ package com.example.watchlist
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
@@ -60,14 +62,48 @@ fun BottomMenu(navController: NavHostController)
 }
 
 @Composable
-fun BottomNavGraph(navController: NavHostController, viewModel: MovieViewModel)
-{
-    NavHost(navController = navController, startDestination = Screens.PopularMoviesScreen.route)
-    {
-        composable(route = Screens.PopularMoviesScreen.route) { PopularMoviesScreen(viewModel) }
-        composable(route = Screens.SearchMovieScreen.route) { SearchMovieScreen(viewModel) }
-        composable(route = Screens.MyMoviesScreen.route) { MyMoviesScreen(viewModel) }
+fun BottomNavGraph(navController: NavHostController, viewModel: MovieViewModel) {
+    NavHost(navController = navController, startDestination = Screens.PopularMoviesScreen.route) {
+        // Popular Movies Screen
+        composable(Screens.PopularMoviesScreen.route) {
+            PopularMoviesScreen(viewModel, onMovieClick = { movie ->
+                navController.navigate(Screens.MovieDetails.createRoute(movie.id))
+            })
+        }
 
+        // Movie Details Screen
+        composable(
+            route = Screens.MovieDetails.route,
+            arguments = listOf(navArgument("movieId") { type = NavType.IntType })
+        ) { backStackEntry ->
+            val movieId = backStackEntry.arguments?.getInt("movieId")
+            if (movieId != null) {
+                val movie = movieId.let { viewModel.findMovieById(it) }
+                if (movie != null) {
+                    val genreText = movie.genreIds.mapNotNull { viewModel._genres[it] }.joinToString(", ")
+                    MovieDetails(movie = movie, genreText = genreText)
+                } else {
+                    Text("Movie not found", Modifier.fillMaxSize(), style = MaterialTheme.typography.bodyLarge)
+                }
+            } else {
+                Text("Invalid movie ID", Modifier.fillMaxSize(), style = MaterialTheme.typography.bodyLarge)
+            }
+        }
 
+        // Search Movie Screen
+       // composable(Screens.SearchMovieScreen.route) {
+         //   SearchMovieScreen(viewModel)
+       // }
+
+        composable(Screens.SearchMovieScreen.route) {
+            SearchMovieScreen(viewModel, onMovieClick = { movie ->
+                navController.navigate(Screens.MovieDetails.createRoute(movie.id))
+            })
+        }
+
+        // My Movies Screen
+        composable(Screens.MyMoviesScreen.route) {
+            MyMoviesScreen(viewModel)
+        }
     }
 }

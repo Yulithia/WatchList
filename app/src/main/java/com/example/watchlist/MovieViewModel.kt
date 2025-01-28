@@ -4,7 +4,6 @@ import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
@@ -12,6 +11,11 @@ import kotlinx.coroutines.launch
 class MovieViewModel : ViewModel() {
     private val _movies = mutableStateListOf<Movie>()
     val movies: List<Movie> = _movies
+
+    private val _searchResults = mutableStateListOf<Movie>()
+    val searchResults: List<Movie> get() = _searchResults
+    private val _isSearching = mutableStateOf(false)
+    val isSearching: Boolean get() = _isSearching.value
 
     private val _isLoading = mutableStateOf(false)
     val isLoading: Boolean get() = _isLoading.value
@@ -37,9 +41,9 @@ class MovieViewModel : ViewModel() {
     {
         viewModelScope.launch {
             try{
-                Log.d("MovieViewModel", "Fetching movies...")
+             //   Log.d("MovieViewModel", "Fetching movies...")
                 val fetchedMovies = RetrofitInstance.api.getPopularMovies(apiKey = BuildConfig.TMDB_API_KEY)
-                Log.d("MovieViewModel", "Fetched movies: ${fetchedMovies.results}")
+               // Log.d("MovieViewModel", "Fetched movies: ${fetchedMovies.results}")
                 _movies.clear()
                 _movies.addAll(fetchedMovies.results)
             } catch(e: Exception)
@@ -51,9 +55,29 @@ class MovieViewModel : ViewModel() {
         }
     }
 
-    fun getPopularMovies(viewModel: MovieViewModel)
+    fun searchMovies(query: String)
     {
-        viewModel.fetchPopularMovies()
+        viewModelScope.launch{
+            _isSearching.value = true
+            try{
+                val response = RetrofitInstance.api.searchMovies(
+                    apiKey = BuildConfig.TMDB_API_KEY,
+                    query = query
+                )
+                Log.d("SearchResponse", "Results: ${response.results}")
+                _searchResults.clear()
+                _searchResults.addAll(response.results)
+            }catch (e: Exception)
+            {
+                Log.e("MovieViewModel", "Error searching for movies: ${e.message}")
+            } finally {
+                _isSearching.value = false
+            }
+        }
     }
-    
+
+    fun findMovieById(id: Int): Movie? {
+        return movies.find { it.id == id } ?: searchResults.find { it.id == id }
+    }
+
 }

@@ -10,7 +10,8 @@ data class Movie(
     @Json(name = "poster_path") val posterPath: String,
     @Json(name = "release_date") val releaseDate: String,
     @Json(name = "vote_average") val rating: Double,
-    @Json(name = "genre_ids") val genreIDs: List<Int>
+    @Json(name = "genre_ids") val genreIds: List<Int>,
+    //@Json(name = "runtime") val runtime: Int
 )
 
 @JsonClass(generateAdapter = true)
