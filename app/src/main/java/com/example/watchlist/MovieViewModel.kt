@@ -20,7 +20,15 @@ class MovieViewModel : ViewModel() {
     private val _isLoading = mutableStateOf(false)
     val isLoading: Boolean get() = _isLoading.value
 
+    private val _favorites = mutableStateListOf<Movie>()
+    val favorites: List<Movie> get() = _favorites
+
     var _genres = mutableStateMapOf<Int, String>()
+
+    init {
+        fetchGenres()
+        fetchPopularMovies()
+    }
 
     fun fetchGenres()
     {
@@ -80,4 +88,18 @@ class MovieViewModel : ViewModel() {
         return movies.find { it.id == id } ?: searchResults.find { it.id == id }
     }
 
+    fun toggleFavourite(movie: Movie)
+    {
+        if(_favorites.contains(movie))
+        {
+            _favorites.remove(movie)
+        }else{
+            _favorites.add(movie)
+        }
+    }
+
+    fun isFavourite(movie: Movie): Boolean
+    {
+        return _favorites.contains(movie)
+    }
 }

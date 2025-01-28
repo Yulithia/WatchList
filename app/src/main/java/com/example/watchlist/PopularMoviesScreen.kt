@@ -19,7 +19,7 @@ import androidx.compose.runtime.remember
 
 @Composable
 fun PopularMoviesScreen(viewModel: MovieViewModel, onMovieClick: (Movie) -> Unit) {
-    viewModel.fetchPopularMovies()
+    //viewModel.fetchPopularMovies()
     val movies by remember { derivedStateOf { viewModel.movies } }
     val isLoading by remember { derivedStateOf { viewModel.isLoading } }
     val genres by remember { derivedStateOf { viewModel._genres } }

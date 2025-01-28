@@ -1,5 +1,6 @@
 package com.example.watchlist
 
+import android.graphics.drawable.Icon
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -11,7 +12,15 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material3.Icon
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SegmentedButtonDefaults.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -21,7 +30,7 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 
 @Composable
-fun MovieDetails(movie: Movie, genreText: String)
+fun MovieDetails(movie: Movie, isFavorite: Boolean, onFavoriteClick: (Movie) -> Unit, genreText: String)
 {
     Column(
         modifier = Modifier.fillMaxSize()
@@ -80,6 +89,13 @@ fun MovieDetails(movie: Movie, genreText: String)
                     //style = MaterialTheme.typography.bodyMedium,
                     fontSize = 18.sp
                 )
+
+                IconButton(onClick = { onFavoriteClick(movie) }) {
+                    Icon(
+                        imageVector = if (isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                        contentDescription = if (isFavorite) "Remove from favorites" else "Add to favorites"
+                    )
+                }
 
             }
 

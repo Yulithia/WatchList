@@ -81,7 +81,8 @@ fun BottomNavGraph(navController: NavHostController, viewModel: MovieViewModel) 
                 val movie = movieId.let { viewModel.findMovieById(it) }
                 if (movie != null) {
                     val genreText = movie.genreIds.mapNotNull { viewModel._genres[it] }.joinToString(", ")
-                    MovieDetails(movie = movie, genreText = genreText)
+                    MovieDetails(movie = movie, genreText = genreText, isFavorite = viewModel.isFavourite(movie),
+                        onFavoriteClick = { viewModel.toggleFavourite(it) })
                 } else {
                     Text("Movie not found", Modifier.fillMaxSize(), style = MaterialTheme.typography.bodyLarge)
                 }
@@ -89,11 +90,6 @@ fun BottomNavGraph(navController: NavHostController, viewModel: MovieViewModel) 
                 Text("Invalid movie ID", Modifier.fillMaxSize(), style = MaterialTheme.typography.bodyLarge)
             }
         }
-
-        // Search Movie Screen
-       // composable(Screens.SearchMovieScreen.route) {
-         //   SearchMovieScreen(viewModel)
-       // }
 
         composable(Screens.SearchMovieScreen.route) {
             SearchMovieScreen(viewModel, onMovieClick = { movie ->
@@ -103,7 +99,15 @@ fun BottomNavGraph(navController: NavHostController, viewModel: MovieViewModel) 
 
         // My Movies Screen
         composable(Screens.MyMoviesScreen.route) {
-            MyMoviesScreen(viewModel)
+            MyMoviesScreen(viewModel, onClick = {
+                navController.navigate(Screens.FavouriteMoviesScreen.route)
+            })
+        }
+
+        composable(Screens.FavouriteMoviesScreen.route) {
+            FavouriteMoviesScreen(viewModel, onMovieClick = { movie->
+                navController.navigate((Screens.MovieDetails.createRoute(movie.id)))
+            })
         }
     }
 }
