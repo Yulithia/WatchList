@@ -4,14 +4,16 @@ import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -20,9 +22,11 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 
 @SuppressLint
 @Composable
@@ -67,7 +71,9 @@ fun BottomNavGraph(navController: NavHostController, viewModel: MovieViewModel) 
         // Popular Movies Screen
         composable(Screens.PopularMoviesScreen.route) {
             PopularMoviesScreen(viewModel, onMovieClick = { movie ->
-                navController.navigate(Screens.MovieDetails.createRoute(movie.id))
+                if (movie != null) {
+                    navController.navigate(Screens.MovieDetails.createRoute(movie.id))
+                }
             })
         }
 
@@ -77,19 +83,47 @@ fun BottomNavGraph(navController: NavHostController, viewModel: MovieViewModel) 
             arguments = listOf(navArgument("movieId") { type = NavType.IntType })
         ) { backStackEntry ->
             val movieId = backStackEntry.arguments?.getInt("movieId")
-            if (movieId != null) {
-                val movie = movieId.let { viewModel.findMovieById(it) }
-                if (movie != null) {
-                    val genreText = movie.genreIds.mapNotNull { viewModel._genres[it] }.joinToString(", ")
-                    MovieDetails(movie = movie, genreText = genreText, isFavorite = viewModel.isFavourite(movie),
-                        onFavoriteClick = { viewModel.toggleFavourite(it) })
-                } else {
-                    Text("Movie not found", Modifier.fillMaxSize(), style = MaterialTheme.typography.bodyLarge)
+
+
+
+            var movie by remember { mutableStateOf<MovieEntity?>(null) }
+
+            LaunchedEffect(movieId) {
+                movieId?.let {
+                    movie = viewModel.findMovieById(it)
+                }
+            }
+
+            if (movie != null) {
+                if (movieId != null) {
+                    MovieDetailsScreen(viewModel, movieId, onClick = {
+                        navController.navigate(Screens.MovieDetails.createRoute(movieId))
+
+                    })
                 }
             } else {
-                Text("Invalid movie ID", Modifier.fillMaxSize(), style = MaterialTheme.typography.bodyLarge)
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    CircularProgressIndicator()
+                }
             }
         }
+         //   if (movieId != null) {
+               // val movie = movieId.let { viewModel.findMovieById(it) }
+           //     val movie by remember { mutableStateOf<MovieEntity?>(null) }
+
+             //   if (movie != null) {
+                    //val genreText = movie!!.genreIds.mapNotNull { viewModel._genres[it] }.joinToString(", ")
+               //     val genres by remember { derivedStateOf { viewModel._genres } }
+                 //   MovieDetails(
+                   //     movie = movie, isFavorite = viewModel.isFavourite(movie!!),
+                     //   onFavoriteClick = { viewModel.toggleFavourite(movie!!) }, genreNames = genres)
+               // } else {
+                 //   Text("Movie not found", Modifier.fillMaxSize(), style = MaterialTheme.typography.bodyLarge)
+              //  }
+           // } else {
+             //   Text("Invalid movie ID", Modifier.fillMaxSize(), style = MaterialTheme.typography.bodyLarge)
+           // }
+        //}
 
         composable(Screens.SearchMovieScreen.route) {
             SearchMovieScreen(viewModel, onMovieClick = { movie ->
@@ -99,15 +133,33 @@ fun BottomNavGraph(navController: NavHostController, viewModel: MovieViewModel) 
 
         // My Movies Screen
         composable(Screens.MyMoviesScreen.route) {
-            MyMoviesScreen(viewModel, onClick = {
-                navController.navigate(Screens.FavouriteMoviesScreen.route)
-            })
+            MyMoviesScreen(viewModel,
+                onFavoritesClick = { navController.navigate(Screens.FavouriteMoviesScreen.route) },
+                onWatchedClick = { navController.navigate(Screens.WatchedMoviesScreen.route) },
+                onWantToWatchClick = { navController.navigate(Screens.WantToWatchMoviesScreen.route) }
+            )
         }
 
         composable(Screens.FavouriteMoviesScreen.route) {
-            FavouriteMoviesScreen(viewModel, onMovieClick = { movie->
-                navController.navigate((Screens.MovieDetails.createRoute(movie.id)))
+            FavouriteMoviesScreen(viewModel, onMovieClick = { movie ->
+                movie?.let { navController.navigate(Screens.MovieDetails.createRoute(it.id)) }
+            })
+        }
+
+        composable(Screens.WatchedMoviesScreen.route) {
+            WatchedMoviesScreen(viewModel, onMovieClick = { movie ->
+                movie?.let { navController.navigate(Screens.MovieDetails.createRoute(it.id)) }
+            })
+        }
+
+        composable(Screens.WantToWatchMoviesScreen.route) {
+            WantToWatchMoviesScreen (viewModel, onMovieClick = { movie ->
+                movie?.let { navController.navigate(Screens.MovieDetails.createRoute(it.id)) }
             })
         }
     }
 }
+
+
+
+

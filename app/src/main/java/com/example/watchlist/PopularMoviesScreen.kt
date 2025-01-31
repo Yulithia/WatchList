@@ -19,10 +19,9 @@ import androidx.compose.runtime.remember
 
 @Composable
 fun PopularMoviesScreen(viewModel: MovieViewModel, onMovieClick: (Movie) -> Unit) {
-    //viewModel.fetchPopularMovies()
-    val movies by remember { derivedStateOf { viewModel.movies } }
+    val movies by remember { derivedStateOf { viewModel.popularMovies } }
     val isLoading by remember { derivedStateOf { viewModel.isLoading } }
-    val genres by remember { derivedStateOf { viewModel._genres } }
+    //val genres by remember { derivedStateOf { viewModel._genres } }
 
     Scaffold { padding ->
         Surface(modifier = Modifier.fillMaxSize().padding(padding)) {
@@ -47,17 +46,17 @@ fun PopularMoviesScreen(viewModel: MovieViewModel, onMovieClick: (Movie) -> Unit
                     )
                 }
 
-                genres.isEmpty() -> {
-                    Text("Loading genres...", modifier = Modifier.fillMaxSize())
-                }
+                //genres.isEmpty() -> {
+                  //  Text("Loading genres...", modifier = Modifier.fillMaxSize())
+                //}
 
                 else -> {
                     LazyColumn(
                         modifier = Modifier.fillMaxSize()) {
                         items(movies) { movie ->
-                            val genreText = movie.genreIds.mapNotNull { genres[it] }.joinToString(", ")
+                            //val genreText = movie?.genreIds?.mapNotNull { genres[it] }?.joinToString(", ")
                             //MovieItem(movie = movie, viewModel, genreText = genreText, onClick = { onMovieClick(movie) })
-                            MovieItem(movie, genreText) { onMovieClick(movie) }
+                            MovieItem(movie, viewModel) { onMovieClick(movie) }
                         }
                     }
                 }

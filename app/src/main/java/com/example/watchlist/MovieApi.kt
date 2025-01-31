@@ -2,6 +2,7 @@ package com.example.watchlist
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface MovieApi {
@@ -24,6 +25,13 @@ interface MovieApi {
         @Query("api_key") apiKey: String,
         @Query("language") language: String = "en-US"
     ): GenreResponse
+
+    @GET("movie/{movieId}")
+    suspend fun getMovieDetails(
+        @Path("movieId") movieId: Int,
+        @Query("api_key") apiKey: String,
+        @Query("language") language: String = "en-US"
+    ): MovieEntity
 }
 
 @JsonClass(generateAdapter = true)

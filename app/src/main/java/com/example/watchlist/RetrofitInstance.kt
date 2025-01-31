@@ -8,11 +8,11 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 
 object RetrofitInstance {
 
-    val logging = HttpLoggingInterceptor().apply {
+    private val logging = HttpLoggingInterceptor().apply {
         level = HttpLoggingInterceptor.Level.BODY
     }
 
-    val client = OkHttpClient.Builder()
+    private val client = OkHttpClient.Builder()
         .addInterceptor(logging)
         .build()
     private const val BASE_URL = "https://api.themoviedb.org/3/"
@@ -24,7 +24,7 @@ object RetrofitInstance {
     val api: MovieApi by lazy {
         Retrofit.Builder()
             .baseUrl(BASE_URL)
-            //.client(client)
+            .client(client)
             .addConverterFactory(MoshiConverterFactory.create(moshi))
             .build()
             .create(MovieApi::class.java)

@@ -23,23 +23,17 @@ import coil.compose.AsyncImage
 
 
 @Composable
-fun MovieItem(movie: Movie, viewModel: MovieViewModel, onClick: () -> Unit) {
-   // var genreText = "Error"
-    //if(movie!!.genres[0][0]?.isEmpty() == true) {
-      //  val genreIds = movie.genres.map { it.id }
-        //genreText = viewModel.getGenreNamesByIds(genreIds)
-    //}else{
-      //  genreText = movie.genres.map { it.name }.joinToString { ", " }
-    //}
-    val genreText = movie.genreIds.mapNotNull { genreId ->
-        viewModel.genres.firstOrNull { it.id == genreId }?.name
-    }.joinToString(", ")
+fun MyMovieItem(movie: MovieEntity?, viewModel: MovieViewModel, onClick: (MovieEntity) -> Unit) {
 
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
-            .clickable(onClick = onClick)
+            .clickable{
+                if (movie != null) {
+                    onClick(movie)
+                }
+            }
     ){
         if (movie != null) {
             AsyncImage(
@@ -57,7 +51,7 @@ fun MovieItem(movie: Movie, viewModel: MovieViewModel, onClick: () -> Unit) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-            .padding(8.dp)
+                .padding(8.dp)
         ){
             if (movie != null) {
                 Text(
@@ -80,7 +74,8 @@ fun MovieItem(movie: Movie, viewModel: MovieViewModel, onClick: () -> Unit) {
 
             if (movie != null) {
                 Text(
-                    text =  genreText,
+                    //text = movie.genres.map { it.name }.joinToString { ", " },
+                    text = movie.genres.joinToString(", ") { it.name },
                     style = MaterialTheme.typography.bodyMedium,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis

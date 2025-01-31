@@ -27,7 +27,7 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun SearchMovieScreen(viewModel: MovieViewModel, onMovieClick: (Movie) -> Unit) {
-    val genres by remember { derivedStateOf { viewModel._genres } }
+    //val genres by remember { derivedStateOf { viewModel._genres } }
     val searchResults by remember { derivedStateOf { viewModel.searchResults }}
     val isSearching by remember { derivedStateOf { viewModel.isSearching }}
     var query by remember { mutableStateOf("") }
@@ -66,8 +66,9 @@ fun SearchMovieScreen(viewModel: MovieViewModel, onMovieClick: (Movie) -> Unit) 
         }else{
             LazyColumn {
                 items(searchResults) { movie ->
-                    val genreText = movie.genreIds.mapNotNull { genres[it] }.joinToString(", ")
-                    MovieItem(movie, genreText) { onMovieClick(movie) }
+                    //val genreText = movie?.genreIds?.mapNotNull { genres[it] }?.joinToString(", ")
+                    MovieItem(movie, viewModel) { onMovieClick(movie) }
+
                 }
         }
     }

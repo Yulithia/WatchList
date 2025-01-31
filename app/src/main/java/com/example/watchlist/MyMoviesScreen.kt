@@ -5,7 +5,6 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -20,7 +19,12 @@ import androidx.compose.ui.unit.sp
 
 
 @Composable
-fun MyMoviesScreen(viewModel: MovieViewModel, onClick: () -> Unit) {
+fun MyMoviesScreen(
+    viewModel: MovieViewModel,
+    onFavoritesClick: () -> Unit,
+    onWatchedClick: () -> Unit,
+    onWantToWatchClick: () -> Unit
+) {
     Column(
         modifier = Modifier.background(Color.Gray)
     ) {
@@ -45,12 +49,60 @@ fun MyMoviesScreen(viewModel: MovieViewModel, onClick: () -> Unit) {
                 )
                 .background(color = Color.LightGray, shape = RoundedCornerShape(12.dp))
                 .padding(16.dp)
-                .clickable(onClick = onClick)
+                .clickable(onClick = onFavoritesClick)
 
         )
         {
             Text(
                 text = "Favourites",
+                textAlign = TextAlign.Center,
+                fontSize = 20.sp,
+                modifier = Modifier.align(Alignment.Center)
+
+            )
+        }
+
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+                .border(
+                    width = 2.dp,
+                    color = Color.Black,
+                    shape = RoundedCornerShape(12.dp)
+                )
+                .background(color = Color.LightGray, shape = RoundedCornerShape(12.dp))
+                .padding(16.dp)
+                .clickable(onClick = onWatchedClick)
+
+        )
+        {
+            Text(
+                text = "Watched",
+                textAlign = TextAlign.Center,
+                fontSize = 20.sp,
+                modifier = Modifier.align(Alignment.Center)
+
+            )
+        }
+
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+                .border(
+                    width = 2.dp,
+                    color = Color.Black,
+                    shape = RoundedCornerShape(12.dp)
+                )
+                .background(color = Color.LightGray, shape = RoundedCornerShape(12.dp))
+                .padding(16.dp)
+                .clickable(onClick = onWantToWatchClick)
+
+        )
+        {
+            Text(
+                text = "Want To Watch",
                 textAlign = TextAlign.Center,
                 fontSize = 20.sp,
                 modifier = Modifier.align(Alignment.Center)

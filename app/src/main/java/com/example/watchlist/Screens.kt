@@ -5,7 +5,12 @@ sealed class Screens(val route: String) {
     data object SearchMovieScreen : Screens("search_movie_screen")
     data object MyMoviesScreen : Screens("my_movie_screen")
     data object FavouriteMoviesScreen : Screens("favourite_movies")
+    data object WatchedMoviesScreen : Screens("watched_movies")
+    data object WantToWatchMoviesScreen : Screens("want_to_watch_movies")
     data object MovieDetails : Screens("movie_details_screen/{movieId}") {
         fun createRoute(movieId: Int): String = "movie_details_screen/$movieId"
+    }
+    data object MyMovieDetails : Screens("my_movie_details_screen/{movieId}") {
+        fun createRoute(movieId: Int): String = "my_movie_details_screen/$movieId"
     }
 }
