@@ -18,7 +18,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 
 
@@ -74,7 +73,6 @@ fun MyMovieItem(movie: MovieEntity?, viewModel: MovieViewModel, onClick: (MovieE
 
             if (movie != null) {
                 Text(
-                    //text = movie.genres.map { it.name }.joinToString { ", " },
                     text = movie.genres.joinToString(", ") { it.name },
                     style = MaterialTheme.typography.bodyMedium,
                     maxLines = 1,

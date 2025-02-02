@@ -17,7 +17,6 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun WantToWatchMoviesScreen(viewModel: MovieViewModel, onMovieClick: (MovieEntity?) -> Unit) {
     val wantToWatch by viewModel.wantToWatch.collectAsState()
-    //val genres by remember { derivedStateOf { viewModel.genres } }
 
     Scaffold { padding ->
         Box(
@@ -30,7 +29,6 @@ fun WantToWatchMoviesScreen(viewModel: MovieViewModel, onMovieClick: (MovieEntit
             } else {
                 LazyColumn {
                     items(wantToWatch) { movie ->
-                        //val genreText = movie?.genres?.mapNotNull { genres[it] }?.joinToString(", ")
                         MyMovieItem(movie, viewModel) { onMovieClick(movie) }
                     }
                 }

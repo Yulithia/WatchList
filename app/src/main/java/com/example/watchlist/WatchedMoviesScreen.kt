@@ -17,7 +17,6 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun WatchedMoviesScreen(viewModel: MovieViewModel, onMovieClick: (MovieEntity?) -> Unit) {
     val watchedMovies by viewModel.watched.collectAsState()
-    //val genres by remember { derivedStateOf { viewModel.genres } }
 
     Scaffold { padding ->
         Box(

@@ -1,7 +1,6 @@
 package com.example.watchlist
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -23,7 +22,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
@@ -78,41 +76,33 @@ fun MovieDetails(
                     fontSize = 18.sp
                 )
 
-                Row(
-                    // modifier = Modifier
-                    // .clickable(onClick = onClick)
-                )
+                Row()
                 {
                     IconButton(onClick = {viewModel.toggleFavourite(movie) }) {
                         val isFavourite = viewModel.isFavourite(movie)
-                        if (movie != null) {
-                            Icon(
-                                imageVector = if (isFavourite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
-                                contentDescription = if (isFavourite) "Remove from Favorites" else "Add to Favorites"
-                            )
-                        }
+                        Icon(
+                            imageVector = if (isFavourite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                            contentDescription = if (isFavourite) "Remove from Favorites" else "Add to Favorites"
+                        )
                     }
 
-                    IconButton(
-                        onClick = { viewModel.toggleWatched(movie) }
+                    IconButton(onClick = { viewModel.toggleWatched(movie) }
                     ) {
-                        if (movie != null) {
-                            Icon(
-                                imageVector = if (movie.isWatched) Icons.Default.Check else Icons.Default.Add,
-                                contentDescription = if (movie.isWatched) "Remove from Watched" else "Add to Watched"
-                            )
-                        }
+                        val isWatched = viewModel.isWatched(movie)
+                        Icon(
+                            imageVector = if (isWatched) Icons.Default.Check else Icons.Default.Add,
+                            contentDescription = if (isWatched) "Remove from Watched" else "Add to Watched"
+                        )
                     }
 
                     IconButton(
                         onClick = { viewModel.toggleWantToWatch(movie) }
                     ) {
-                        if (movie != null) {
-                            Icon(
-                                imageVector = if (movie.isWantToWatch) Icons.Default.Star else Icons.Default.KeyboardArrowDown,
-                                contentDescription = if (movie.isWantToWatch) "Remove from Want to Watch" else "Add to Want to Watch"
-                            )
-                        }
+                        val isWantToWatch = viewModel.isWantWatch(movie)
+                        Icon(
+                            imageVector = if (isWantToWatch) Icons.Default.Star else Icons.Default.KeyboardArrowDown,
+                            contentDescription = if (isWantToWatch) "Remove from Want to Watch" else "Add to Want to Watch"
+                        )
                     }
                 }
 

@@ -18,19 +18,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 
 
 @Composable
 fun MovieItem(movie: Movie, viewModel: MovieViewModel, onClick: () -> Unit) {
-   // var genreText = "Error"
-    //if(movie!!.genres[0][0]?.isEmpty() == true) {
-      //  val genreIds = movie.genres.map { it.id }
-        //genreText = viewModel.getGenreNamesByIds(genreIds)
-    //}else{
-      //  genreText = movie.genres.map { it.name }.joinToString { ", " }
-    //}
     val genreText = movie.genreIds.mapNotNull { genreId ->
         viewModel.genres.firstOrNull { it.id == genreId }?.name
     }.joinToString(", ")
@@ -41,16 +33,14 @@ fun MovieItem(movie: Movie, viewModel: MovieViewModel, onClick: () -> Unit) {
             .padding(8.dp)
             .clickable(onClick = onClick)
     ){
-        if (movie != null) {
-            AsyncImage(
-                model = "https://image.tmdb.org/t/p/w500${movie.posterPath}",
-                contentDescription = "Movie Poster",
-                modifier = Modifier
-                    .size(100.dp)
-                    .clip(RoundedCornerShape(8.dp))
-                    .background(MaterialTheme.colorScheme.surface)
-            )
-        }
+        AsyncImage(
+            model = "https://image.tmdb.org/t/p/w500${movie.posterPath}",
+            contentDescription = "Movie Poster",
+            modifier = Modifier
+                .size(100.dp)
+                .clip(RoundedCornerShape(8.dp))
+                .background(MaterialTheme.colorScheme.surface)
+        )
 
         Spacer(modifier = Modifier.width(8.dp))
 
@@ -59,44 +49,36 @@ fun MovieItem(movie: Movie, viewModel: MovieViewModel, onClick: () -> Unit) {
                 .fillMaxWidth()
             .padding(8.dp)
         ){
-            if (movie != null) {
-                Text(
-                    text = movie.title,
-                    //fontSize = 18.sp,
-                    style = MaterialTheme.typography.titleMedium,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
-            }
+            Text(
+                text = movie.title,
+                //fontSize = 18.sp,
+                style = MaterialTheme.typography.titleMedium,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
 
-            if (movie != null) {
-                Text(
-                    text = "Release date: " + movie.releaseDate,
-                    style = MaterialTheme.typography.bodyMedium,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
-            }
+            Text(
+                text = "Release date: " + movie.releaseDate,
+                style = MaterialTheme.typography.bodyMedium,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
 
-            if (movie != null) {
-                Text(
-                    text =  genreText,
-                    style = MaterialTheme.typography.bodyMedium,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
-            }
+            Text(
+                text =  genreText,
+                style = MaterialTheme.typography.bodyMedium,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
 
             Spacer(modifier = Modifier.height(4.dp))
 
-            if (movie != null) {
-                Text(
-                    text = movie.overview,
-                    style = MaterialTheme.typography.bodyMedium,
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis
-                )
-            }
+            Text(
+                text = movie.overview,
+                style = MaterialTheme.typography.bodyMedium,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis
+            )
         }
     }
 }

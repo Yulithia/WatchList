@@ -3,17 +3,12 @@ package com.example.watchlist
 import android.app.Application
 import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 
 class MovieViewModel(application: Application) : AndroidViewModel(application) {
@@ -60,7 +55,7 @@ class MovieViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun fetchGenres()
+    private fun fetchGenres()
     {
         viewModelScope.launch {
             try {
@@ -75,23 +70,13 @@ class MovieViewModel(application: Application) : AndroidViewModel(application) {
 
     }
 
-    fun fetchPopularMovies()
+    private fun fetchPopularMovies()
     {
         viewModelScope.launch {
             try{
                 Log.d("MovieViewModel", "Fetching movies...")
                 val fetchedMovies = RetrofitInstance.api.getPopularMovies(apiKey = BuildConfig.TMDB_API_KEY)
                 Log.d("MovieViewModel", "Fetched movies: ${fetchedMovies.results}")
-                //val movieEntities = fetchedMovies.results.map { it.toMovieEntity() }
-
-               // val movieEntities = fetchedMovies.results.map { movie ->
-
-                 //   val genreNames = movie.genreIds.mapNotNull { genreId ->
-                   //     _genres[genreId.id]
-                    //}
-
-                   // movie.toMovieEntity().copy(genres = genreNames)
-                //}
 
                 _popularMovies.clear()
                 _popularMovies.addAll(fetchedMovies.results)
@@ -125,8 +110,7 @@ class MovieViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    suspend fun findMovieById(id: Int): MovieEntity? {
-        //return movies.find { it.id == id } ?: searchResults.find { it.id == id }
+    suspend fun findMovieById(id: Int): MovieEntity {
         return movieDAO.getMovieById(id) ?: RetrofitInstance.api.getMovieDetails(id, BuildConfig.TMDB_API_KEY)
 
     }
@@ -180,7 +164,7 @@ class MovieViewModel(application: Application) : AndroidViewModel(application) {
                 movieDAO.updateMovie(updatedMovie)
 
                 val updatedList = _favourites.value.toMutableList()
-                updatedList.removeIf { (it.id ?: -1) == movie.id }
+                updatedList.removeIf { it.id == movie.id }
                 updatedList.add(updatedMovie)
                 _favourites.value = updatedList
             } else {
@@ -215,7 +199,7 @@ class MovieViewModel(application: Application) : AndroidViewModel(application) {
                 movieDAO.updateMovie(updatedMovie)
 
                 val updatedList = _watched.value.toMutableList()
-                updatedList.removeIf { (it.id ?: -1) == movie.id }
+                updatedList.removeIf { it.id == movie.id }
                 updatedList.add(updatedMovie)
                 _watched.value = updatedList
             } else {
@@ -250,7 +234,7 @@ class MovieViewModel(application: Application) : AndroidViewModel(application) {
                 movieDAO.updateMovie(updatedMovie)
 
                 val updatedList = _wantToWatch.value.toMutableList()
-                updatedList.removeIf { (it.id ?: -1) == movie.id }
+                updatedList.removeIf { it.id == movie.id }
                 updatedList.add(updatedMovie)
                 _wantToWatch.value = updatedList
             } else {

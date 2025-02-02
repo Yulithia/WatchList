@@ -10,7 +10,4 @@ sealed class Screens(val route: String) {
     data object MovieDetails : Screens("movie_details_screen/{movieId}") {
         fun createRoute(movieId: Int): String = "movie_details_screen/$movieId"
     }
-    data object MyMovieDetails : Screens("my_movie_details_screen/{movieId}") {
-        fun createRoute(movieId: Int): String = "my_movie_details_screen/$movieId"
-    }
 }

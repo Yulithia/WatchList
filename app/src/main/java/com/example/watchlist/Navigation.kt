@@ -68,12 +68,11 @@ fun BottomMenu(navController: NavHostController)
 @Composable
 fun BottomNavGraph(navController: NavHostController, viewModel: MovieViewModel) {
     NavHost(navController = navController, startDestination = Screens.PopularMoviesScreen.route) {
+
         // Popular Movies Screen
         composable(Screens.PopularMoviesScreen.route) {
             PopularMoviesScreen(viewModel, onMovieClick = { movie ->
-                if (movie != null) {
-                    navController.navigate(Screens.MovieDetails.createRoute(movie.id))
-                }
+                navController.navigate(Screens.MovieDetails.createRoute(movie.id))
             })
         }
 
@@ -83,9 +82,6 @@ fun BottomNavGraph(navController: NavHostController, viewModel: MovieViewModel) 
             arguments = listOf(navArgument("movieId") { type = NavType.IntType })
         ) { backStackEntry ->
             val movieId = backStackEntry.arguments?.getInt("movieId")
-
-
-
             var movie by remember { mutableStateOf<MovieEntity?>(null) }
 
             LaunchedEffect(movieId) {
@@ -107,24 +103,8 @@ fun BottomNavGraph(navController: NavHostController, viewModel: MovieViewModel) 
                 }
             }
         }
-         //   if (movieId != null) {
-               // val movie = movieId.let { viewModel.findMovieById(it) }
-           //     val movie by remember { mutableStateOf<MovieEntity?>(null) }
 
-             //   if (movie != null) {
-                    //val genreText = movie!!.genreIds.mapNotNull { viewModel._genres[it] }.joinToString(", ")
-               //     val genres by remember { derivedStateOf { viewModel._genres } }
-                 //   MovieDetails(
-                   //     movie = movie, isFavorite = viewModel.isFavourite(movie!!),
-                     //   onFavoriteClick = { viewModel.toggleFavourite(movie!!) }, genreNames = genres)
-               // } else {
-                 //   Text("Movie not found", Modifier.fillMaxSize(), style = MaterialTheme.typography.bodyLarge)
-              //  }
-           // } else {
-             //   Text("Invalid movie ID", Modifier.fillMaxSize(), style = MaterialTheme.typography.bodyLarge)
-           // }
-        //}
-
+        // Search Movie Screen
         composable(Screens.SearchMovieScreen.route) {
             SearchMovieScreen(viewModel, onMovieClick = { movie ->
                 navController.navigate(Screens.MovieDetails.createRoute(movie.id))
@@ -140,18 +120,21 @@ fun BottomNavGraph(navController: NavHostController, viewModel: MovieViewModel) 
             )
         }
 
+        // Favourite Movies Screen
         composable(Screens.FavouriteMoviesScreen.route) {
             FavouriteMoviesScreen(viewModel, onMovieClick = { movie ->
                 movie?.let { navController.navigate(Screens.MovieDetails.createRoute(it.id)) }
             })
         }
 
+        // Watched Movies Screen
         composable(Screens.WatchedMoviesScreen.route) {
             WatchedMoviesScreen(viewModel, onMovieClick = { movie ->
                 movie?.let { navController.navigate(Screens.MovieDetails.createRoute(it.id)) }
             })
         }
 
+        // Want To Watch Movies
         composable(Screens.WantToWatchMoviesScreen.route) {
             WantToWatchMoviesScreen (viewModel, onMovieClick = { movie ->
                 movie?.let { navController.navigate(Screens.MovieDetails.createRoute(it.id)) }
