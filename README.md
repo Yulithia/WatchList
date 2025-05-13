@@ -1,6 +1,6 @@
 Create your personal watch-list.
 
-# Used Technologies
+## Used Technologies
 - TMDB Database: API for movie information
 - Retrofit: handling HTTP requests
 - Moshi: JSON Converter
